@@ -27,6 +27,21 @@ app.post("/user",[body("username").isEmail(),body("password").isLength({min: 5})
     res.json({msg:"sucesso"});
 });
 
+app.post("/custom-validator",[body("username").custom(value =>{
+
+    if(value == 'yuran@gmail.com'){
+        return Promise.reject("Ja existe uma Conta com esse Email")
+    }
+
+    })],(req,res) =>{
+    const erros = validationResult(req);
+    if(!erros.isEmpty()){
+        return res.status(400).json({erros: erros.array()});
+
+    }
+    res.json({msg:"sucesso"});
+});
+
 
 app.listen(port, () =>{
     console.log(`rodando na porta ${port}`);
